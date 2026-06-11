@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KOSAVA — From Earth to Object</title>
+<meta name="description" content="Kosava is a pottery studio. Watch one lump of clay become a finished vessel — hand built, wheel thrown, trimmed, and fired.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FBF9F5;
+    --ivory:#F4EFE6;
+    --ink:#1C1814;
+    --ink-2:#575047;
+    --line:#E6DFD3;
+    --orange:#C8571C;
+    --orange-deep:#A84614;
+    --serif:'Fraunces',serif;
+    --sans:'Inter',sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    background:var(--bg);color:var(--ink);font-family:var(--sans);
+    font-weight:300;overflow-x:hidden;-webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--orange);color:#fff}
+
+  /* ============ loader ============ */
+  #loader{
+    position:fixed;inset:0;z-index:300;background:var(--bg);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.8rem;
+    transition:opacity .9s ease,visibility .9s;
+  }
+  #loader.done{opacity:0;visibility:hidden}
+  #loader .mark{font-family:var(--serif);font-weight:400;font-size:1.6rem;letter-spacing:.5em;text-indent:.5em}
+  #loader .bar{width:200px;height:1px;background:var(--line);overflow:hidden}
+  #loader .bar i{display:block;height:100%;background:var(--orange);transform-origin:left;transform:scaleX(0);transition:transform .25s ease}
+
+  /* ============ nav ============ */
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    display:flex;justify-content:space-between;align-items:center;
+    padding:1.5rem clamp(1.5rem,4vw,3.5rem);
+    background:linear-gradient(180deg,rgba(251,249,245,.92),rgba(251,249,245,0));
+  }
+  nav .logo{font-family:var(--serif);font-weight:500;font-size:1.25rem;letter-spacing:.42em;text-indent:.42em;text-decoration:none;color:var(--ink)}
+  nav .links{display:flex;gap:2.4rem}
+  nav .links a{
+    font-size:.72rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;
+    text-decoration:none;color:var(--ink);padding-bottom:4px;position:relative;
+  }
+  nav .links a::after{
+    content:'';position:absolute;left:0;bottom:0;width:100%;height:1px;background:var(--orange);
+    transform:scaleX(0);transform-origin:right;transition:transform .4s cubic-bezier(.7,0,.3,1);
+  }
+  nav .links a:hover::after{transform:scaleX(1);transform-origin:left}
+  @media(max-width:640px){nav .links{gap:1.3rem}nav .links a{font-size:.64rem}}
+
+  /* ============ hero ============ */
+  .hero{
+    height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;position:relative;padding:0 1.5rem;
+  }
+  .hero .kicker{
+    font-size:.74rem;font-weight:500;letter-spacing:.46em;text-transform:uppercase;
+    color:var(--orange);margin-bottom:2.2rem;
+  }
+  .hero h1{
+    font-family:var(--serif);font-weight:300;
+    font-size:clamp(2.6rem,7.2vw,6rem);line-height:1.08;letter-spacing:-0.01em;
+    max-width:16ch;
+  }
+  .hero h1 em{font-style:italic;font-weight:400;color:var(--orange)}
+  .hero .sub{
+    margin-top:2rem;font-size:clamp(.95rem,1.4vw,1.1rem);color:var(--ink-2);
+    max-width:44ch;line-height:1.7;
+  }
+  .hero .line-mask{overflow:hidden;display:block}
+  .scroll-cue{
+    position:absolute;bottom:3rem;left:50%;transform:translateX(-50%);
+    display:flex;flex-direction:column;align-items:center;gap:.9rem;
+  }
+  .scroll-cue .label{font-size:.66rem;font-weight:500;letter-spacing:.4em;text-transform:uppercase;color:var(--ink-2)}
+  .scroll-cue .track{width:1px;height:64px;background:var(--line);position:relative;overflow:hidden}
+  .scroll-cue .track::after{
+    content:'';position:absolute;left:0;top:-40%;width:100%;height:40%;
+    background:var(--orange);animation:cueDrop 2s cubic-bezier(.65,0,.35,1) infinite;
+  }
+  @keyframes cueDrop{0%{top:-40%}60%{top:100%}100%{top:100%}}
+
+  /* ============ the making (pinned scrub) ============ */
+  #making{position:relative}
+  #making .stage-pin{height:100vh;width:100%;position:relative;overflow:hidden}
+  #seqCanvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+
+  .stage-copy{
+    position:absolute;z-index:5;top:50%;transform:translateY(-50%);
+    width:min(36ch,40vw);opacity:0;visibility:hidden;
+    background:rgba(251,249,245,.88);
+    -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+    border:1px solid var(--line);border-radius:2px;
+    padding:1.7rem 1.9rem;
+  }
+  .stage-copy.left{left:clamp(1.6rem,7vw,7rem)}
+  .stage-copy.right{right:clamp(1.6rem,7vw,7rem)}
+  .stage-copy .stage-num{
+    font-family:var(--serif);font-style:italic;font-weight:300;
+    font-size:1.05rem;color:var(--orange);display:flex;align-items:center;gap:.9rem;
+    margin-bottom:1.3rem;
+  }
+  .stage-copy .stage-num::after{content:'';height:1px;width:54px;background:var(--orange);opacity:.55}
+  .stage-copy h2{
+    font-family:var(--serif);font-weight:400;
+    font-size:clamp(2rem,3.6vw,3.2rem);line-height:1.12;letter-spacing:-0.01em;
+    margin-bottom:1.2rem;
+  }
+  .stage-copy p{
+    font-size:clamp(.92rem,1.15vw,1.04rem);line-height:1.75;color:var(--ink-2);
+  }
+  @media(max-width:760px){
+    .stage-copy{
+      top:auto;bottom:4.5rem;transform:none;width:auto;
+      left:1.4rem!important;right:1.4rem!important;
+      background:rgba(251,249,245,.94);border:1px solid var(--line);
+      padding:1.2rem 1.4rem;border-radius:2px;
+    }
+    .stage-copy h2{font-size:1.5rem}
+  }
+
+  .making-progress{
+    position:absolute;z-index:6;left:50%;bottom:2.2rem;transform:translateX(-50%);
+    display:flex;align-items:center;gap:.6rem;
+  }
+  .making-progress .seg{width:42px;height:2px;background:var(--line);position:relative;overflow:hidden}
+  .making-progress .seg i{position:absolute;inset:0;background:var(--orange);transform:scaleX(0);transform-origin:left}
+
+  /* ============ finale ============ */
+  .finale{
+    position:relative;min-height:100vh;
+    display:flex;align-items:center;justify-content:center;
+    padding:14vh clamp(1.5rem,5vw,4rem) 10vh;
+  }
+  .finale-grid{
+    display:grid;grid-template-columns:1fr 1fr;gap:clamp(2rem,6vw,6rem);
+    align-items:center;max-width:1200px;width:100%;
+  }
+  .finale-visual{position:relative;display:flex;align-items:center;justify-content:center}
+  .plinth{
+    width:78%;aspect-ratio:16/9;border-radius:2px;overflow:hidden;
+    background:var(--ivory);display:flex;align-items:flex-end;justify-content:center;
+  }
+  .bowl-wrap{
+    position:absolute;width:46%;z-index:2;bottom:14%;
+    filter:drop-shadow(0 26px 32px rgba(28,24,20,.22));
+  }
+  #bowlJump{width:100%;display:block}
+  #bowlSheen{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+  .finale-copy .stage-num{
+    font-family:var(--serif);font-style:italic;font-weight:300;
+    font-size:1.05rem;color:var(--orange);display:flex;align-items:center;gap:.9rem;margin-bottom:1.3rem;
+  }
+  .finale-copy .stage-num::after{content:'';height:1px;width:54px;background:var(--orange);opacity:.55}
+  .finale-copy h2{
+    font-family:var(--serif);font-weight:400;
+    font-size:clamp(2.1rem,3.8vw,3.4rem);line-height:1.1;margin-bottom:1.2rem;letter-spacing:-0.01em;
+  }
+  .finale-copy p{font-size:clamp(.92rem,1.15vw,1.04rem);line-height:1.75;color:var(--ink-2);max-width:40ch}
+  .cta-row{display:flex;gap:1rem;margin-top:2.6rem;flex-wrap:wrap}
+  .btn{
+    display:inline-block;text-decoration:none;font-size:.74rem;font-weight:500;
+    letter-spacing:.24em;text-transform:uppercase;padding:1.15rem 2.4rem;
+    transition:all .35s cubic-bezier(.6,0,.3,1);border:1px solid transparent;
+  }
+  .btn-solid{background:var(--orange);color:#fff}
+  .btn-solid:hover{background:var(--orange-deep)}
+  .btn-ghost{border-color:var(--ink);color:var(--ink)}
+  .btn-ghost:hover{background:var(--ink);color:var(--bg)}
+  @media(max-width:860px){
+    .finale-grid{grid-template-columns:1fr}
+    .finale-visual{order:-1}
+    .plinth{width:100%}
+  }
+
+  /* ============ footer ============ */
+  footer{
+    border-top:1px solid var(--line);
+    padding:3.2rem clamp(1.5rem,4vw,3.5rem);
+    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1.2rem;
+  }
+  footer .logo{font-family:var(--serif);font-weight:500;letter-spacing:.42em;text-indent:.42em;font-size:1rem}
+  footer .links{display:flex;gap:2rem}
+  footer a{color:var(--ink-2);text-decoration:none;font-size:.7rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase}
+  footer a:hover{color:var(--orange)}
+  footer .fine{font-size:.7rem;letter-spacing:.14em;color:var(--ink-2)}
+</style>
+</head>
+<body>
+
+<div id="loader">
+  <div class="mark">KOSAVA</div>
+  <div class="bar"><i id="loadBar"></i></div>
+</div>
+
+<nav>
+  <a class="logo" href="#">KOSAVA</a>
+  <div class="links">
+    <a href="#making">The Craft</a>
+    <a href="#store">Store</a>
+    <a href="#classes">Classes</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="kicker" data-h>Kosava — Pottery Studio</div>
+  <h1>
+    <span class="line-mask"><span data-h-line>One lump of clay.</span></span>
+    <span class="line-mask"><span data-h-line>One pair of hands.</span></span>
+    <span class="line-mask"><span data-h-line>One <em>finished</em> vessel.</span></span>
+  </h1>
+  <div class="sub" data-h>Scroll to follow a single piece of earth through every stage of its making — shaped, thrown, trimmed, and fired.</div>
+  <div class="scroll-cue" data-h>
+    <span class="label">Scroll</span>
+    <div class="track"></div>
+  </div>
+</header>
+
+<!-- THE MAKING -->
+<section id="making">
+  <div class="stage-pin">
+    <canvas id="seqCanvas"></canvas>
+
+    <div class="stage-copy left" data-stage="0">
+      <div class="stage-num">No. 01 — Hand Building</div>
+      <h2>It begins as raw earth.</h2>
+      <p>Every Kosava piece starts as a single ball of clay. We press, pinch, and coil it by hand — no moulds, no shortcuts — giving the clay its first memory of form.</p>
+    </div>
+
+    <div class="stage-copy right" data-stage="1">
+      <div class="stage-num">No. 02 — Wheel Throwing</div>
+      <h2>The wheel finds its center.</h2>
+      <p>On the spinning wheel, the rough form is coaxed into balance. Wet hands and steady pressure draw the walls upward into a clean, symmetrical vessel.</p>
+    </div>
+
+    <div class="stage-copy left" data-stage="2">
+      <div class="stage-num">No. 03 — Trimming</div>
+      <h2>Less clay, more grace.</h2>
+      <p>Once leather-hard, the bowl returns to the wheel. A sharpened blade peels away ribbons of excess until only the essential silhouette — and a delicate foot ring — remains.</p>
+    </div>
+
+    <div class="stage-copy right" data-stage="3">
+      <div class="stage-num">No. 04 — The Firing</div>
+      <h2>Earth, transformed.</h2>
+      <p>Fired to 1,260°C and finished in our signature amber-orange glaze, the clay becomes permanent — polished, durable, and unlike any other piece in the world.</p>
+    </div>
+
+    <div class="making-progress" id="segBar">
+      <div class="seg"><i></i></div><div class="seg"><i></i></div>
+      <div class="seg"><i></i></div><div class="seg"><i></i></div>
+    </div>
+  </div>
+</section>
+
+<!-- FINALE -->
+<section class="finale" id="finale">
+  <div class="finale-grid">
+    <div class="finale-copy">
+      <div class="stage-num">From our hands to yours</div>
+      <h2 data-f>The same clay, ready for your table.</h2>
+      <p data-f>The bowl you just watched being made is the bowl we sell — and the bowl we'll teach you to make yourself. Take one home, or take the seat at the wheel.</p>
+      <div class="cta-row" data-f>
+        <a class="btn btn-solid" href="#store" id="store">Visit the Store</a>
+        <a class="btn btn-ghost" href="#classes" id="classes">Sign Up for Classes</a>
+      </div>
+    </div>
+    <div class="finale-visual">
+      <div class="plinth"></div>
+      <div class="bowl-wrap" id="bowlWrap">
+        <img id="bowlJump" src="assets/bowl_cutout.png" alt="The finished Kosava bowl with amber-orange glaze">
+        <canvas id="bowlSheen"></canvas>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="logo">KOSAVA</div>
+  <div class="links">
+    <a href="#store">Store</a>
+    <a href="#classes">Classes</a>
+  </div>
+  <div class="fine">© MMXXVI Kosava — hand made, every time</div>
+</footer>
+
+<script src="assets/js/gsap.min.js"></script>
+<script src="assets/js/ScrollTrigger.min.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+/* ---------- frame sequence config ----------
+   assets/seq/s{stage}_{frame}.webp — four stages, FRAMES_PER frames each */
+const STAGES = 4;
+const FRAMES_PER = 60;
+const TOTAL = STAGES * FRAMES_PER;
+const seqPath = (s, f) => `assets/seq/s${s}_${String(f + 1).padStart(3, '0')}.webp`;
+
+const frames = new Array(TOTAL).fill(null);
+let loadedCount = 0, sequencesAvailable = true;
+
+const loader = document.getElementById('loader');
+const loadBar = document.getElementById('loadBar');
+
+function preload() {
+  return new Promise(resolve => {
+    /* probe first frame; if the sequence isn't generated yet, resolve in still-image mode */
+    const probe = new Image();
+    probe.src = seqPath(0, 0);
+    probe.onerror = () => { sequencesAvailable = false; resolve(); };
+    probe.onload = () => {
+      frames[0] = probe; loadedCount = 1;
+      for (let i = 1; i < TOTAL; i++) {
+        const img = new Image();
+        img.src = seqPath(Math.floor(i / FRAMES_PER), i % FRAMES_PER);
+        img.onload = img.onerror = () => {
+          loadedCount++;
+          loadBar.style.transform = `scaleX(${loadedCount / TOTAL})`;
+          if (loadedCount === TOTAL) resolve();
+        };
+        frames[i] = img;
+      }
+    };
+  });
+}
+
+/* fallback stills (keyframes) while sequences are pending */
+const KEYFRAMES = [
+  'assets/key_0_clay.png',
+  'assets/key_1_handbuilt.png',
+  'assets/key_2_thrown.png',
+  'assets/key_3_trimmed.png',
+  'assets/key_4_glazed.png'
+];
+
+const canvas = document.getElementById('seqCanvas');
+const ctx = canvas.getContext('2d');
+let lastFrame = 0;
+const stillImgs = [];
+
+function sizeCanvas() {
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  canvas.width = canvas.clientWidth * dpr;
+  canvas.height = canvas.clientHeight * dpr;
+  render(lastFrame);
+}
+window.addEventListener('resize', sizeCanvas);
+
+function drawCover(img) {
+  if (!img || !img.complete || !img.naturalWidth) return;
+  const cw = canvas.width, ch = canvas.height;
+  const ir = img.naturalWidth / img.naturalHeight, cr = cw / ch;
+  let dw, dh;
+  if (cr > ir) { dw = cw; dh = cw / ir; } else { dh = ch; dw = ch * ir; }
+  /* fill edges with page bg so cover-crop never shows seams */
+  ctx.fillStyle = '#FBF9F5';
+  ctx.fillRect(0, 0, cw, ch);
+  ctx.drawImage(img, (cw - dw) / 2, (ch - dh) / 2, dw, dh);
+}
+
+function render(globalProgress) {
+  lastFrame = globalProgress;
+  if (sequencesAvailable) {
+    const idx = Math.max(0, Math.min(TOTAL - 1, Math.round(globalProgress * (TOTAL - 1))));
+    drawCover(frames[idx]);
+  } else {
+    /* still mode: crossfade keyframes */
+    const pos = globalProgress * STAGES;
+    const i = Math.max(0, Math.min(STAGES - 1, Math.floor(pos)));
+    const t = pos - i;
+    drawCover(stillImgs[i]);
+    if (t > 0.55 && stillImgs[i + 1]) {
+      ctx.globalAlpha = (t - 0.55) / 0.45;
+      drawCover(stillImgs[i + 1]);
+      ctx.globalAlpha = 1;
+    }
+  }
+}
+
+function buildAnimations() {
+  /* hero entrance */
+  gsap.from('[data-h-line]', { yPercent: 115, duration: 1.2, ease: 'power4.out', stagger: 0.12, delay: 0.2 });
+  gsap.from('[data-h]', { opacity: 0, y: 16, duration: 1, ease: 'power3.out', stagger: 0.14, delay: 0.9 });
+
+  /* hero exit */
+  gsap.to('.hero', {
+    opacity: 0, yPercent: -8, ease: 'none',
+    scrollTrigger: { trigger: '.hero', start: '40% top', end: 'bottom top', scrub: true }
+  });
+
+  /* the making: pin + scrub */
+  const copies = gsap.utils.toArray('.stage-copy');
+  const segs = gsap.utils.toArray('#segBar .seg i');
+  let activeStage = -1;
+
+  function setStage(idx) {
+    if (idx === activeStage) return;
+    activeStage = idx;
+    copies.forEach((el, i) => {
+      if (i === idx) {
+        gsap.set(el, { visibility: 'visible' });
+        gsap.fromTo(el, { opacity: 0, y: 28 }, { opacity: 1, y: 0, duration: 0.65, ease: 'power3.out', overwrite: true });
+      } else {
+        gsap.to(el, { opacity: 0, y: -18, duration: 0.35, ease: 'power2.in', overwrite: true,
+          onComplete: () => gsap.set(el, { visibility: 'hidden' }) });
+      }
+    });
+  }
+
+  ScrollTrigger.create({
+    trigger: '#making',
+    start: 'top top',
+    end: '+=480%',
+    pin: '#making .stage-pin',
+    scrub: 0.5,
+    anticipatePin: 1,
+    onUpdate(self) {
+      render(self.progress);
+      const stage = Math.max(0, Math.min(STAGES - 1, Math.floor(self.progress * STAGES)));
+      setStage(stage);
+      segs.forEach((seg, i) => {
+        const sp = Math.max(0, Math.min(1, self.progress * STAGES - i));
+        seg.style.transform = `scaleX(${sp})`;
+      });
+    }
+  });
+
+  /* finale: the bowl jumps out of the wheel and lands on the plinth */
+  const wrap = document.getElementById('bowlWrap');
+  const sheen = document.getElementById('bowlSheen');
+  gsap.set(wrap, { opacity: 0 });
+  const jump = gsap.timeline({
+    scrollTrigger: { trigger: '#finale', start: 'top 72%', once: true }
+  });
+  jump.fromTo(wrap,
+      { opacity: 0, y: -360, scale: 0.5, rotation: -8 },
+      { opacity: 1, y: 0, scale: 1, rotation: 0, duration: 1.2, ease: 'bounce.out' })
+    .fromTo(wrap,
+      { filter: 'drop-shadow(0 70px 60px rgba(28,24,20,0))' },
+      { filter: 'drop-shadow(0 26px 32px rgba(28,24,20,.22))', duration: 1.2 }, 0)
+    /* polished sheen sweep after landing (canvas composite — works on file:// too) */
+    .to({ p: -0.4 }, { p: 1.4, duration: 1.1, ease: 'power2.inOut',
+        onUpdate() { drawSheen(this.targets()[0].p); },
+        onComplete() { drawSheen(2); } }, '>-0.1');
+
+  function drawSheen(p) {
+    const img = document.getElementById('bowlJump');
+    if (!img.complete || !img.naturalWidth) return;
+    const c = sheen, sctx = c.getContext('2d');
+    if (c.width !== c.clientWidth * 2) { c.width = c.clientWidth * 2; c.height = c.clientHeight * 2; }
+    const cw = c.width, ch = c.height;
+    sctx.clearRect(0, 0, cw, ch);
+    if (p > 1.5) return;
+    const bandW = cw * 0.34, x = p * (cw + bandW * 2) - bandW;
+    const g = sctx.createLinearGradient(x - bandW, 0, x + bandW, ch * 0.5);
+    g.addColorStop(0, 'rgba(255,255,255,0)');
+    g.addColorStop(0.5, 'rgba(255,255,255,0.45)');
+    g.addColorStop(1, 'rgba(255,255,255,0)');
+    sctx.fillStyle = g;
+    sctx.fillRect(0, 0, cw, ch);
+    sctx.globalCompositeOperation = 'destination-in';
+    sctx.drawImage(img, 0, 0, cw, ch);
+    sctx.globalCompositeOperation = 'source-over';
+  }
+
+  gsap.from('[data-f]', {
+    opacity: 0, y: 26, duration: 0.9, ease: 'power3.out', stagger: 0.12,
+    scrollTrigger: { trigger: '#finale', start: 'top 70%' }
+  });
+}
+
+/* boot */
+(async () => {
+  await preload();
+  if (!sequencesAvailable) {
+    await Promise.all(KEYFRAMES.map((src, i) => new Promise(res => {
+      const img = new Image(); img.src = src;
+      img.onload = img.onerror = () => { stillImgs[i] = img; res(); };
+    })));
+  }
+  sizeCanvas();
+  render(0);
+  buildAnimations();
+  ScrollTrigger.refresh();
+  setTimeout(() => loader.classList.add('done'), 200);
+})();
+</script>
+</body>
+</html>

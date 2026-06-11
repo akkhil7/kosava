@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KOSAVA — Meet Lump (Cartoon)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FFFFFF;
+    --ink:#221D18;
+    --line:#221D18;
+    --clay:#C97D52;
+    --clay-2:#B5663F;
+    --glaze:#C8571C;
+    --orange:#C8571C;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif;overflow-x:hidden}
+  ::selection{background:var(--orange);color:#fff}
+
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:50;
+    display:flex;justify-content:space-between;align-items:center;
+    padding:1.4rem clamp(1.4rem,4vw,3rem);
+  }
+  nav .logo{font-family:'Fraunces',serif;font-weight:600;font-size:1.15rem;letter-spacing:.4em;text-indent:.4em;color:var(--ink);text-decoration:none}
+  nav .tag{font-size:.66rem;letter-spacing:.3em;text-transform:uppercase;color:#9b938a}
+
+  #stage{height:100vh;width:100%;position:relative;overflow:hidden}
+  #stage svg{position:absolute;inset:0;width:100%;height:100%}
+
+  .title-card{position:absolute;top:20%;left:0;right:0;text-align:center;z-index:5;pointer-events:none}
+  .title-card h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(2.4rem,5.5vw,4.2rem)}
+  .title-card h1 em{font-style:italic;color:var(--orange)}
+  .title-card p{font-size:clamp(.85rem,1.4vw,1rem);font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:#9b938a;margin-top:1rem}
+  .cue{position:absolute;bottom:3rem;left:50%;transform:translateX(-50%);z-index:5;display:flex;flex-direction:column;align-items:center;gap:.5rem;pointer-events:none}
+  .cue span{font-size:.62rem;letter-spacing:.38em;text-transform:uppercase;color:#9b938a}
+  .cue svg{width:22px;height:30px}
+
+  .word{
+    position:absolute;z-index:5;font-family:'Fraunces',serif;font-style:italic;font-weight:400;
+    font-size:clamp(1.6rem,3.4vw,2.6rem);color:var(--ink);opacity:0;pointer-events:none;white-space:nowrap;
+  }
+  .word b{color:var(--orange);font-style:normal;font-family:'Inter',sans-serif;font-weight:700;font-size:.55em;letter-spacing:.3em;vertical-align:middle;margin-right:.7rem}
+
+  .cta-card{position:absolute;top:14%;left:0;right:0;text-align:center;z-index:5;opacity:0;pointer-events:none}
+  .cta-card h2{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(2rem,4.4vw,3.4rem)}
+  .cta-card p{font-family:'Fraunces',serif;font-style:italic;color:#8c8378;margin-top:.6rem;font-size:1.05rem}
+  .cta-card .row{display:flex;gap:.9rem;justify-content:center;margin-top:1.6rem;pointer-events:auto}
+  .btn{display:inline-block;text-decoration:none;font-size:.7rem;font-weight:700;letter-spacing:.24em;text-transform:uppercase;padding:1rem 2.1rem;border:3px solid var(--ink);transition:all .25s}
+  .btn-solid{background:var(--orange);color:#fff;border-color:var(--ink);box-shadow:5px 5px 0 var(--ink)}
+  .btn-solid:hover{transform:translate(2px,2px);box-shadow:3px 3px 0 var(--ink)}
+  .btn-ghost{color:var(--ink);box-shadow:5px 5px 0 var(--ink)}
+  .btn-ghost:hover{transform:translate(2px,2px);box-shadow:3px 3px 0 var(--ink)}
+
+  .hint{position:fixed;bottom:1.1rem;right:1.3rem;z-index:50;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:#b9b2a9}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="index.html">KOSAVA</a>
+  <span class="tag">cartoon study</span>
+</nav>
+
+<div id="stage">
+  <svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid meet" aria-label="Lump the clay becomes a bowl">
+    <defs>
+      <g id="star">
+        <path d="M0 -12 L2.6 -2.6 L12 0 L2.6 2.6 L0 12 L-2.6 2.6 L-12 0 L-2.6 -2.6 Z"/>
+      </g>
+    </defs>
+
+    <!-- ground line -->
+    <line id="ground" x1="140" y1="560" x2="1060" y2="560" stroke="#221D18" stroke-width="5" stroke-linecap="round" stroke-dasharray="1 26"/>
+
+    <!-- wheel -->
+    <g id="wheel" transform="translate(600,1060)">
+      <rect x="-12" y="24" width="24" height="44" rx="8" fill="#fff" stroke="#221D18" stroke-width="6"/>
+      <ellipse cx="0" cy="16" rx="140" ry="30" fill="#E9E5E0" stroke="#221D18" stroke-width="6"/>
+      <g id="whirl" opacity="0">
+        <path d="M -178 8 A 182 40 0 0 1 -110 -26" fill="none" stroke="#C8571C" stroke-width="7" stroke-linecap="round"/>
+        <path d="M 178 22 A 182 40 0 0 0 116 48" fill="none" stroke="#C8571C" stroke-width="7" stroke-linecap="round"/>
+        <path d="M 0 -28 A 182 40 0 0 1 90 -20" fill="none" stroke="#221D18" stroke-width="5" stroke-linecap="round" opacity=".4"/>
+      </g>
+    </g>
+
+    <!-- kiln (with a face!) -->
+    <g id="kiln" transform="translate(1700,420)">
+      <rect x="-135" y="-160" width="270" height="300" rx="30" fill="#F2EDE7" stroke="#221D18" stroke-width="7"/>
+      <rect x="-30" y="-222" width="60" height="74" rx="12" fill="#fff" stroke="#221D18" stroke-width="7"/>
+      <g id="kSmoke" opacity="0">
+        <circle cx="0" cy="-250" r="12" fill="none" stroke="#221D18" stroke-width="5"/>
+        <circle cx="20" cy="-280" r="16" fill="none" stroke="#221D18" stroke-width="5"/>
+      </g>
+      <!-- kiln eyes -->
+      <g id="kilnFace">
+        <circle cx="-44" cy="-92" r="9" fill="#221D18"/>
+        <circle cx="44" cy="-92" r="9" fill="#221D18"/>
+        <path id="kilnSmile" d="M -26 -62 Q 0 -44 26 -62" fill="none" stroke="#221D18" stroke-width="6" stroke-linecap="round"/>
+      </g>
+      <!-- mouth-door -->
+      <circle id="kilnGlow" cx="0" cy="34" r="78" fill="#FF9C3F" opacity="0"/>
+      <ellipse id="kilnMouth" cx="0" cy="34" rx="64" ry="14" fill="#221D18"/>
+      <g id="flames" opacity="0">
+        <path d="M -28 52 Q -34 18 -16 6 Q -18 28 -4 20 Q -8 44 -28 52" fill="#C8571C"/>
+        <path d="M 6 54 Q 0 22 20 8 Q 16 32 30 26 Q 24 48 6 54" fill="#FF9C3F"/>
+      </g>
+      <!-- timer -->
+      <g transform="translate(96,-128)">
+        <circle r="22" fill="#fff" stroke="#221D18" stroke-width="6"/>
+        <line id="timerHand" x1="0" y1="0" x2="0" y2="-14" stroke="#C8571C" stroke-width="5" stroke-linecap="round"/>
+      </g>
+      <text id="ding" x="96" y="-176" font-family="Inter" font-weight="700" font-size="26" fill="#C8571C" text-anchor="middle" opacity="0">DING!</text>
+    </g>
+
+    <!-- squishing hands -->
+    <g id="handT" transform="translate(600,-200)">
+      <path d="M -52 0 Q -56 -38 -30 -44 L 34 -44 Q 58 -40 54 -6 Q 50 18 24 22 L -22 22 Q -48 20 -52 0 Z" fill="#fff" stroke="#221D18" stroke-width="6"/>
+      <line x1="-10" y1="-44" x2="-10" y2="20" stroke="#221D18" stroke-width="4"/>
+      <line x1="12" y1="-44" x2="12" y2="20" stroke="#221D18" stroke-width="4"/>
+    </g>
+    <g id="handB" transform="translate(600,1000)">
+      <path d="M -52 0 Q -56 38 -30 44 L 34 44 Q 58 40 54 6 Q 50 -18 24 -22 L -22 -22 Q -48 -20 -52 0 Z" fill="#fff" stroke="#221D18" stroke-width="6"/>
+      <line x1="-10" y1="44" x2="-10" y2="-20" stroke="#221D18" stroke-width="4"/>
+      <line x1="12" y1="44" x2="12" y2="-20" stroke="#221D18" stroke-width="4"/>
+    </g>
+
+    <!-- peeler tool -->
+    <g id="peeler" transform="translate(1450,300) rotate(30)" opacity="0">
+      <rect x="-7" y="-90" width="14" height="120" rx="7" fill="#fff" stroke="#221D18" stroke-width="6"/>
+      <path d="M -18 34 L 18 34 L 10 78 L -10 78 Z" fill="#E9E5E0" stroke="#221D18" stroke-width="6"/>
+    </g>
+
+    <!-- LUMP the character -->
+    <g id="lump" transform="translate(600,470)">
+      <g id="squish">
+        <!-- bodies (swapped per stage) -->
+        <path id="bodyLump" fill="#C97D52" stroke="#221D18" stroke-width="7"
+          d="M -74 18 C -84 -28 -50 -68 -2 -70 C 46 -72 80 -40 78 6 C 76 50 44 76 -2 76 C -44 76 -66 52 -74 18 Z"/>
+        <g id="bodyBowl" opacity="0">
+          <path fill="#C97D52" stroke="#221D18" stroke-width="7"
+            d="M -92 -30 C -92 12 -80 50 -46 62 C -16 71 18 71 46 61 C 80 48 92 10 92 -30 C 74 -18 40 -12 0 -12 C -40 -12 -74 -18 -92 -30 Z"/>
+          <ellipse cx="0" cy="-28" rx="92" ry="18" fill="#B5663F" stroke="#221D18" stroke-width="6"/>
+        </g>
+        <g id="bodyTrim" opacity="0">
+          <path fill="#C97D52" stroke="#221D18" stroke-width="7"
+            d="M -88 -32 C -88 8 -76 44 -44 56 C -16 64 18 64 44 55 C 76 43 88 6 88 -32 C 70 -20 38 -15 0 -15 C -38 -15 -70 -20 -88 -32 Z"/>
+          <ellipse cx="0" cy="-30" rx="88" ry="17" fill="#B5663F" stroke="#221D18" stroke-width="6"/>
+          <rect x="-26" y="54" width="52" height="14" rx="7" fill="#C97D52" stroke="#221D18" stroke-width="6"/>
+        </g>
+        <g id="bodyGlaze" opacity="0">
+          <path fill="#C8571C" stroke="#221D18" stroke-width="7"
+            d="M -88 -32 C -88 8 -76 44 -44 56 C -16 64 18 64 44 55 C 76 43 88 6 88 -32 C 70 -20 38 -15 0 -15 C -38 -15 -70 -20 -88 -32 Z"/>
+          <ellipse cx="0" cy="-30" rx="88" ry="17" fill="#8A3A0F" stroke="#221D18" stroke-width="6"/>
+          <rect x="-26" y="54" width="52" height="14" rx="7" fill="#C8571C" stroke="#221D18" stroke-width="6"/>
+          <path d="M -58 -20 C -56 0 -60 8 -52 9 C -45 8 -49 -2 -47 -19 Z M 14 -16 C 16 6 11 14 19 15 C 26 14 21 2 23 -16 Z" fill="#8A3A0F" stroke="#221D18" stroke-width="4"/>
+          <ellipse cx="-40" cy="6" rx="12" ry="22" fill="#fff" opacity=".5" transform="rotate(16 -40 6)"/>
+        </g>
+        <!-- face -->
+        <g id="face" transform="translate(0,6)">
+          <g id="eyeL" transform="translate(-26,-14)">
+            <circle r="15" fill="#fff" stroke="#221D18" stroke-width="5"/>
+            <circle id="pupL" r="6" fill="#221D18"/>
+            <rect id="lidL" x="-17" y="-17" width="34" height="0" fill="#C97D52"/>
+          </g>
+          <g id="eyeR" transform="translate(26,-14)">
+            <circle r="15" fill="#fff" stroke="#221D18" stroke-width="5"/>
+            <circle id="pupR" r="6" fill="#221D18"/>
+            <rect id="lidR" x="-17" y="-17" width="34" height="0" fill="#C97D52"/>
+          </g>
+          <path id="mouth" d="M -14 22 Q 0 34 14 22" fill="none" stroke="#221D18" stroke-width="5" stroke-linecap="round"/>
+          <circle id="blushL" cx="-46" cy="12" r="8" fill="#E8915B" opacity=".7"/>
+          <circle id="blushR" cx="46" cy="12" r="8" fill="#E8915B" opacity=".7"/>
+          <path id="sweat" d="M 0 -6 Q 6 4 0 8 Q -6 4 0 -6" fill="#7FB3D8" stroke="#221D18" stroke-width="3" opacity="0" transform="translate(52,-34)"/>
+        </g>
+        <!-- sunglasses -->
+        <g id="shades" opacity="0" transform="translate(0,-10)">
+          <rect x="-44" y="-10" width="36" height="22" rx="9" fill="#221D18"/>
+          <rect x="8" y="-10" width="36" height="22" rx="9" fill="#221D18"/>
+          <line x1="-8" y1="-2" x2="8" y2="-2" stroke="#221D18" stroke-width="5"/>
+        </g>
+      </g>
+    </g>
+
+    <!-- shadow -->
+    <ellipse id="lumpShadow" cx="600" cy="562" rx="80" ry="10" fill="#221D18" opacity=".12"/>
+
+    <!-- dizzy stars + confetti -->
+    <g id="dizzy" opacity="0">
+      <use href="#star" fill="#C8571C" x="0" y="0"/>
+      <use href="#star" fill="#221D18" x="0" y="0"/>
+    </g>
+    <g id="confetti" opacity="0">
+      <rect width="12" height="12" fill="#C8571C"/>
+      <circle r="7" fill="#221D18"/>
+      <rect width="10" height="10" fill="#E8915B"/>
+      <circle r="6" fill="#C8571C"/>
+      <rect width="12" height="12" fill="#221D18"/>
+      <circle r="7" fill="#E8915B"/>
+    </g>
+    <!-- podium -->
+    <g id="podium" transform="translate(600,1100)">
+      <rect x="-110" y="0" width="220" height="90" rx="6" fill="#fff" stroke="#221D18" stroke-width="7"/>
+      <text x="0" y="58" font-family="Fraunces" font-style="italic" font-size="30" text-anchor="middle" fill="#221D18">№ 1</text>
+    </g>
+  </svg>
+
+  <div class="title-card" id="titleCard">
+    <h1>Meet <em>Lump</em>.</h1>
+    <p>he has big dreams of becoming a bowl</p>
+  </div>
+  <div class="cue" id="cue">
+    <span>scroll</span>
+    <svg viewBox="0 0 22 30"><rect x="2" y="2" width="18" height="26" rx="9" fill="none" stroke="#221D18" stroke-width="3"/><circle cx="11" cy="10" r="3" fill="#C8571C"/></svg>
+  </div>
+
+  <div class="word" id="word"><b></b><span></span></div>
+
+  <div class="cta-card" id="ctaCard">
+    <h2>Lump made it.<br>So can yours.</h2>
+    <p>buy a finished piece — or come make your own lump proud</p>
+    <div class="row">
+      <a class="btn btn-solid" href="#store">Visit the Store</a>
+      <a class="btn btn-ghost" href="#classes">Join a Class</a>
+    </div>
+  </div>
+</div>
+
+<div class="hint">his eyes follow you · click him</div>
+
+<script src="assets/js/gsap.min.js"></script>
+<script src="assets/js/ScrollTrigger.min.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+const $ = id => document.getElementById(id);
+
+const lump = $('lump'), squish = $('squish'), face = $('face');
+const BODIES = ['bodyLump','bodyBowl','bodyTrim','bodyGlaze'];
+function body(name, t, tl){ BODIES.forEach(b => tl.set($(b), { opacity: b === name ? 1 : 0 }, t)); }
+
+/* ---------- master timeline ---------- */
+const tl = gsap.timeline({ paused: true, defaults: { ease: 'power2.inOut' } });
+
+function word(t, kicker, txt, x = '50%', y = '74%'){
+  tl.call(() => { $('word').querySelector('b').textContent = kicker; $('word').querySelector('span').textContent = txt; }, null, t)
+    .set($('word'), { left: x, top: y, xPercent: -50, opacity: 0, y: 18 }, t)
+    .to($('word'), { opacity: 1, y: 0, duration: .5, ease: 'back.out(2)' }, t + .05);
+}
+function wordOut(t, tlRef = tl){ tlRef.to($('word'), { opacity: 0, y: -14, duration: .3 }, t); }
+
+/* S0: hello (0–6) */
+tl.to(squish, { scaleY: .94, scaleX: 1.05, duration: 1.2, yoyo: true, repeat: 1, transformOrigin: '50% 100%' }, 0)
+  .to($('titleCard'), { opacity: 0, y: -30, duration: 1 }, 4.4)
+  .to($('cue'), { opacity: 0, duration: .6 }, 4.4);
+
+/* S1: squish (6–15) — hands press Lump into a bowl */
+word(6.4, '01', 'a little pressure…');
+tl.to($('handT'), { y: 330, duration: 1.4, ease: 'back.out(1.2)' }, 6.6)
+  .to($('handB'), { y: 648, duration: 1.4, ease: 'back.out(1.2)' }, 6.6)
+  .to($('pupL'), { y: -5, duration: .3 }, 7.0).to($('pupR'), { y: -5, duration: .3 }, 7.0)
+  /* press 1 */
+  .to($('handT'), { y: 410, duration: .5, ease: 'power3.in' }, 8.4)
+  .to(squish, { scaleY: .6, scaleX: 1.3, duration: .5, transformOrigin: '50% 100%' }, 8.4)
+  .to($('mouth'), { attr: { d: 'M -12 22 Q 0 16 12 22' }, duration: .3 }, 8.4)
+  .to($('handT'), { y: 330, duration: .5 }, 9.0)
+  .to(squish, { scaleY: 1.12, scaleX: .9, duration: .5, ease: 'back.out(3)' }, 9.0)
+  /* press 2 */
+  .to($('handT'), { y: 430, duration: .45, ease: 'power3.in' }, 10.0)
+  .to(squish, { scaleY: .5, scaleX: 1.4, duration: .45, transformOrigin: '50% 100%' }, 10.0)
+  .to($('handT'), { y: 320, duration: .5 }, 10.6)
+  /* pop! lump becomes bowl-with-face */
+  .to(squish, { scaleY: 1.18, scaleX: .88, duration: .4, ease: 'back.out(4)' }, 10.6);
+body('bodyBowl', 11.0, tl);
+tl.set(face, { y: -16 }, 11.0)
+  .to(squish, { scaleY: 1, scaleX: 1, duration: .5, ease: 'elastic.out(1.4,.4)' }, 11.1)
+  .to($('mouth'), { attr: { d: 'M -16 22 Q 0 38 16 22' }, duration: .4 }, 11.2)
+  .to($('handT'), { y: -200, duration: 1, ease: 'power2.in' }, 12.2)
+  .to($('handB'), { y: 1000, duration: 1, ease: 'power2.in' }, 12.2);
+wordOut(13.6);
+
+/* S2: spin (15–24) */
+word(15.4, '02', 'wheeee!');
+tl.to($('wheel'), { y: 582, duration: 1.2, ease: 'back.out(1.1)' }, 15.4) /* wheel rises */
+  .to(lump, { y: 506, duration: .8, ease: 'bounce.out' }, 16.4)          /* sit on wheel */
+  .to($('lumpShadow'), { opacity: 0, duration: .4 }, 16.4)
+  .set($('whirl'), { opacity: 1 }, 17.2)
+  .to($('whirl'), { rotation: 720, transformOrigin: '0 16', duration: 4, ease: 'none' }, 17.2)
+  .to(squish, { rotation: 4, duration: .3, yoyo: true, repeat: 7, transformOrigin: '50% 80%' }, 17.2)
+  /* dizzy eyes: pupils orbit */
+  .to([$('pupL'), $('pupR')], { rotation: 720, transformOrigin: '0 -8', duration: 2.6, ease: 'none' }, 17.6)
+  /* dizzy stars */
+  .set($('dizzy'), { opacity: 1 }, 18.0);
+const dz = $('dizzy').children;
+[[0,-90],[1,90]].forEach(([i,dx])=>{
+  tl.set(dz[i], { x: 600+dx, y: 330 }, 18.0)
+    .to(dz[i], { y: 300, rotation: 360, duration: 2.2, ease: 'none' }, 18.0);
+});
+tl.to($('dizzy'), { opacity: 0, duration: .3 }, 20.4)
+  .to($('whirl'), { opacity: 0, duration: .3 }, 21.0)
+  .set([$('pupL'), $('pupR')], { rotation: 0 }, 21.2)
+  .to($('mouth'), { attr: { d: 'M -18 22 Q 0 40 18 22' }, duration: .3 }, 21.2);
+wordOut(22.6);
+
+/* S3: trim (24–31) — ticklish */
+word(24.4, '03', 'hehe, that tickles');
+tl.set($('peeler'), { opacity: 1 }, 24.6)
+  .to($('peeler'), { x: 745, y: 400, duration: 1, ease: 'back.out(1.4)' }, 24.6)
+  .to($('peeler'), { rotation: 38, duration: .25, yoyo: true, repeat: 5 }, 25.8)
+  .to(squish, { scaleX: 1.06, scaleY: .96, duration: .2, yoyo: true, repeat: 7, transformOrigin: '50% 100%' }, 25.8)
+  .to([$('blushL'), $('blushR')], { scale: 1.5, transformOrigin: 'center', duration: .4 }, 25.8);
+body('bodyTrim', 27.4, tl);
+tl.to($('peeler'), { x: 1450, y: 300, opacity: 0, duration: .8, ease: 'power2.in' }, 27.8)
+  .to([$('blushL'), $('blushR')], { scale: 1, duration: .4 }, 28.2)
+  .to($('wheel'), { y: 1060, duration: 1, ease: 'power2.in' }, 28.6)
+  .to(lump, { y: 498, duration: .9, ease: 'bounce.out' }, 28.8) /* back to ground */
+  .to($('lumpShadow'), { opacity: .12, duration: .4 }, 29.2);
+wordOut(30);
+
+/* S4: kiln (31–46) — nervous, then triumphant */
+word(31.4, '04', 'the spicy sauna');
+tl.to($('kiln'), { x: 820, duration: 1.4, ease: 'back.out(1)' }, 31.4) /* kiln slides in */
+  /* lump looks at kiln, gulps, sweats */
+  .to([$('pupL'), $('pupR')], { x: 7, duration: .4 }, 32.6)
+  .to($('mouth'), { attr: { d: 'M -10 26 Q 0 20 10 26' }, duration: .3 }, 32.8)
+  .to($('sweat'), { opacity: 1, y: 10, duration: .8 }, 33.0)
+  .to($('sweat'), { opacity: 0, duration: .3 }, 34.0)
+  /* hops in */
+  .to(lump, { x: 710, duration: .6, ease: 'power1.inOut' }, 34.4)
+  .to(lump, { y: 448, duration: .3, ease: 'power2.out' }, 34.4).to(lump, { y: 498, duration: .3, ease: 'power2.in' }, 34.7)
+  .to(lump, { x: 820, duration: .6 }, 35.2)
+  .to(lump, { y: 440, duration: .3, ease: 'power2.out' }, 35.2).to(lump, { y: 498, duration: .3, ease: 'power2.in' }, 35.5)
+  .to($('lumpShadow'), { x: '+=220', duration: 1.4 }, 34.4)
+  /* swallowed by the kiln mouth */
+  .to($('kilnMouth'), { attr: { ry: 52 }, duration: .4 }, 36.2)
+  .to(lump, { x: 820, y: 470, scale: .25, opacity: 0, duration: .7, ease: 'power2.in', transformOrigin: 'center' }, 36.4)
+  .to($('lumpShadow'), { opacity: 0, duration: .3 }, 36.4)
+  .to($('kilnMouth'), { attr: { ry: 14 }, duration: .4 }, 37.2)
+  /* kiln gulps and fires */
+  .to($('kiln'), { scaleY: .96, duration: .25, yoyo: true, repeat: 1, transformOrigin: '50% 100%' }, 37.4)
+  .set($('flames'), { opacity: 1 }, 38.0)
+  .to($('flames'), { scaleY: 1.25, transformOrigin: '50% 100%', duration: .3, yoyo: true, repeat: 9 }, 38.0)
+  .to($('kilnGlow'), { opacity: .45, duration: .4, yoyo: true, repeat: 7 }, 38.2)
+  .to($('timerHand'), { rotation: 360, transformOrigin: '0 0', duration: 4, ease: 'none' }, 38.0)
+  .to($('kiln'), { x: '-=5', duration: .1, yoyo: true, repeat: 14 }, 38.6)
+  .set($('kSmoke'), { opacity: 1 }, 38.8)
+  .to($('kSmoke'), { y: -30, duration: 2.8 }, 38.8)
+  .to($('kSmoke'), { opacity: 0, duration: .4 }, 41.2)
+  /* DING! */
+  .to($('flames'), { opacity: 0, duration: .2 }, 42.0)
+  .to($('kilnGlow'), { opacity: 0, duration: .2 }, 42.0)
+  .set($('ding'), { opacity: 1, scale: .4, transformOrigin: '96px -176px' }, 42.2)
+  .to($('ding'), { scale: 1.15, duration: .35, ease: 'back.out(3)' }, 42.2)
+  .to($('ding'), { opacity: 0, duration: .3 }, 43.4)
+  /* spit out, glazed + shades */
+  .to($('kilnMouth'), { attr: { ry: 52 }, duration: .3 }, 43.0);
+body('bodyGlaze', 43.2, tl);
+tl.set($('shades'), { opacity: 0 }, 43.2)
+  .set(lump, { opacity: 1, scale: 1, x: 820, y: 490 }, 43.2)
+  .to(lump, { x: 600, duration: 1, ease: 'power1.out' }, 43.3)
+  .to(lump, { y: 400, duration: .5, ease: 'power2.out' }, 43.3)
+  .to(lump, { y: 498, duration: .55, ease: 'bounce.out' }, 43.8)
+  .to($('lumpShadow'), { x: 0, opacity: .12, duration: .8 }, 43.4)
+  .to($('mouth'), { attr: { d: 'M -18 22 Q 0 40 18 22' }, duration: .3 }, 44.2)
+  .to($('shades'), { opacity: 1, y: -24, duration: .35, ease: 'back.out(2)' }, 44.6)
+  .to($('kiln'), { x: 1700, duration: 1.2, ease: 'power2.in' }, 44.8);
+wordOut(45.4);
+
+/* S5: podium finale (46–54) */
+tl.to($('podium'), { y: 572, duration: 1, ease: 'back.out(1.2)' }, 46.4) /* podium rises */
+  .to(lump, { y: 440, duration: .5, ease: 'power2.out' }, 47.0)
+  .to(lump, { y: 510, duration: .4, ease: 'bounce.out' }, 47.5) /* lands on podium */
+  .to($('lumpShadow'), { opacity: 0, duration: .3 }, 47.0)
+  .to($('ground'), { opacity: 0, duration: .5 }, 47.0);
+/* confetti */
+const cf = $('confetti').children;
+tl.set($('confetti'), { opacity: 1 }, 47.8);
+[...Array(6)].forEach((_, i) => {
+  const x0 = 320 + i * 110, drift = (i % 2 ? 70 : -60);
+  tl.set(cf[i], { x: x0, y: 180 }, 47.8)
+    .to(cf[i], { y: 700, x: x0 + drift, rotation: 540, duration: 3.2, ease: 'none' }, 47.8 + (i % 3) * .3);
+});
+tl.to($('confetti'), { opacity: 0, duration: .6 }, 51.4)
+  .to($('ctaCard'), { opacity: 1, duration: 1 }, 49.6)
+  .set($('ctaCard'), { pointerEvents: 'auto' }, 49.6);
+tl.to({}, { duration: 2 }, 52);
+
+/* ---------- scroll driver (smooth cartoon scrub) ---------- */
+ScrollTrigger.create({
+  trigger: '#stage',
+  start: 'top top',
+  end: '+=520%',
+  pin: true,
+  scrub: 0.5,
+  onUpdate(self){ tl.progress(self.progress); }
+});
+
+/* ---------- interactivity ---------- */
+/* eyes follow the cursor */
+window.addEventListener('pointermove', e => {
+  const r = $('stage').getBoundingClientRect();
+  const cx = e.clientX - (r.left + r.width / 2), cy = e.clientY - (r.top + r.height * .55);
+  const a = Math.atan2(cy, cx), d = Math.min(6, Math.hypot(cx, cy) / 60);
+  gsap.to([$('pupL'), $('pupR')], { x: Math.cos(a) * d, y: Math.sin(a) * d, duration: .25, overwrite: 'auto' });
+});
+/* blink loop */
+setInterval(() => {
+  if (document.hidden) return;
+  gsap.timeline()
+    .to([$('lidL'), $('lidR')], { attr: { height: 34 }, duration: .08 })
+    .to([$('lidL'), $('lidR')], { attr: { height: 0 }, duration: .12 }, .12);
+}, 3400);
+/* click = giggle */
+let giggling = false;
+$('stage').addEventListener('pointerdown', () => {
+  if (giggling) return;
+  giggling = true;
+  gsap.timeline({ onComplete: () => giggling = false })
+    .to(squish, { scaleY: .8, scaleX: 1.18, duration: .12, transformOrigin: '50% 100%' })
+    .to(squish, { scaleY: 1.1, scaleX: .94, duration: .16 })
+    .to(squish, { scaleY: 1, scaleX: 1, duration: .45, ease: 'elastic.out(1.3,.35)' })
+    .to($('mouth'), { attr: { d: 'M -18 20 Q 0 44 18 20' }, duration: .15 }, 0)
+    .to($('mouth'), { attr: { d: 'M -14 22 Q 0 34 14 22' }, duration: .3 }, .5);
+});
+
+tl.progress(0);
+</script>
+</body>
+</html>
