@@ -3,8 +3,55 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KOSAVA — From Earth to Object</title>
-<meta name="description" content="Kosava is a pottery studio. Watch one lump of clay become a finished vessel — hand built, wheel thrown, trimmed, and fired.">
+<title>KOSAVA Pottery Studio — Handmade Ceramics, Pottery Classes & Workshops</title>
+<meta name="description" content="Kosava is an independent pottery studio by ceramicist Rosa. Watch one lump of clay become a finished vessel — hand built, wheel thrown, trimmed, and kiln fired. Shop handmade ceramics or join a pottery class.">
+<meta name="keywords" content="pottery studio, handmade ceramics, pottery classes, wheel throwing, hand building, ceramic bowls, pottery workshop, Kosava">
+<meta name="author" content="Kosava Pottery Studio">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="theme-color" content="#FBF9F5">
+<link rel="canonical" href="https://kosava.pages.dev/">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="KOSAVA Pottery Studio">
+<meta property="og:title" content="KOSAVA — One Lump of Clay. One Finished Vessel.">
+<meta property="og:description" content="Scroll through the making of a single handmade bowl — shaped, thrown, trimmed, and fired in our studio. Shop the collection or sign up for classes.">
+<meta property="og:url" content="https://kosava.pages.dev/">
+<meta property="og:image" content="https://kosava.pages.dev/assets/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="A handmade Kosava bowl with amber-orange glaze on a potter's wheel">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="KOSAVA — One Lump of Clay. One Finished Vessel.">
+<meta name="twitter:description" content="Scroll through the making of a single handmade bowl — shaped, thrown, trimmed, and fired.">
+<meta name="twitter:image" content="https://kosava.pages.dev/assets/og.jpg">
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='%23C8571C' d='M8 22c0 14 4 28 24 28s24-14 24-28c-6 4-14 6-24 6S14 26 8 22z'/%3E%3Cellipse cx='32' cy='23' rx='24' ry='7' fill='%23A84614'/%3E%3C/svg%3E">
+
+<!-- Structured data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "@id": "https://kosava.pages.dev/#studio",
+  "name": "Kosava Pottery Studio",
+  "url": "https://kosava.pages.dev/",
+  "image": "https://kosava.pages.dev/assets/og.jpg",
+  "description": "Independent pottery studio offering handmade ceramics and pottery classes. Every piece is hand built, wheel thrown, trimmed, and kiln fired in-house.",
+  "founder": {
+    "@type": "Person",
+    "name": "Rosa",
+    "jobTitle": "Ceramicist & Studio Owner"
+  },
+  "makesOffer": [
+    { "@type": "Offer", "itemOffered": { "@type": "Product", "name": "Handmade ceramic tableware" } },
+    { "@type": "Offer", "itemOffered": { "@type": "Course", "name": "Pottery classes — wheel throwing, hand building, trimming and glazing" } }
+  ]
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -58,10 +105,19 @@
   nav .links a:hover::after{transform:scaleX(1);transform-origin:left}
   @media(max-width:640px){nav .links{gap:1.3rem}nav .links a{font-size:.64rem}}
 
-  /* ============ hero ============ */
+  /* ============ hero (overlaid on the film) ============ */
   .hero{
-    height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
-    text-align:center;position:relative;padding:0 1.5rem;
+    position:absolute;inset:0;z-index:7;
+    display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
+    text-align:center;padding:14vh 1.5rem 0;pointer-events:none;
+    background:linear-gradient(180deg,
+      rgba(251,249,245,.98) 0%,
+      rgba(251,249,245,.92) 38%,
+      rgba(251,249,245,.6) 60%,
+      rgba(251,249,245,0) 85%);
+  }
+  .hero h1,.hero .sub,.hero .kicker{
+    text-shadow:0 0 14px rgba(251,249,245,.95),0 0 34px rgba(251,249,245,.85);
   }
   .hero .kicker{
     font-size:.74rem;font-weight:500;letter-spacing:.46em;text-transform:uppercase;
@@ -79,8 +135,12 @@
   }
   .hero .line-mask{overflow:hidden;display:block}
   .scroll-cue{
-    position:absolute;bottom:3rem;left:50%;transform:translateX(-50%);
-    display:flex;flex-direction:column;align-items:center;gap:.9rem;
+    position:absolute;bottom:2.2rem;left:50%;transform:translateX(-50%);
+    display:flex;flex-direction:column;align-items:center;gap:.8rem;
+    background:rgba(251,249,245,.88);
+    -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+    border:1px solid var(--line);border-radius:999px;
+    padding:1rem 1.3rem .9rem;
   }
   .scroll-cue .label{font-size:.66rem;font-weight:500;letter-spacing:.4em;text-transform:uppercase;color:var(--ink-2)}
   .scroll-cue .track{width:1px;height:64px;background:var(--line);position:relative;overflow:hidden}
@@ -183,6 +243,43 @@
     .plinth{width:100%}
   }
 
+  /* ============ about ============ */
+  .about{
+    border-top:1px solid var(--line);
+    padding:16vh clamp(1.5rem,5vw,4rem);
+    display:flex;justify-content:center;
+  }
+  .about-grid{
+    display:grid;grid-template-columns:minmax(280px,420px) 1fr;
+    gap:clamp(2rem,6vw,5.5rem);align-items:center;max-width:1100px;width:100%;
+  }
+  .about-img{
+    aspect-ratio:4/5;background:var(--ivory);border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;overflow:hidden;border-radius:2px;
+  }
+  .about-img img{width:100%;height:100%;object-fit:cover;display:block}
+  .about-copy .stage-num{
+    font-family:var(--serif);font-style:italic;font-weight:300;
+    font-size:1.05rem;color:var(--orange);display:flex;align-items:center;gap:.9rem;margin-bottom:1.3rem;
+  }
+  .about-copy .stage-num::after{content:'';height:1px;width:54px;background:var(--orange);opacity:.55}
+  .about-copy h2{
+    font-family:var(--serif);font-weight:400;
+    font-size:clamp(2rem,3.6vw,3.2rem);line-height:1.12;letter-spacing:-0.01em;margin-bottom:1.2rem;
+  }
+  .about-copy h2 em{font-style:italic;color:var(--orange)}
+  .about-copy p{
+    font-size:clamp(.92rem,1.15vw,1.04rem);line-height:1.78;color:var(--ink-2);
+    max-width:54ch;margin-bottom:1.1rem;
+  }
+  .about-sign{
+    font-family:var(--serif);font-style:italic;font-size:1.5rem;margin-top:1.4rem;color:var(--ink);
+  }
+  @media(max-width:820px){
+    .about-grid{grid-template-columns:1fr}
+    .about-img{max-width:380px;margin:0 auto}
+  }
+
   /* ============ footer ============ */
   footer{
     border-top:1px solid var(--line);
@@ -207,51 +304,51 @@
   <a class="logo" href="#">KOSAVA</a>
   <div class="links">
     <a href="#making">The Craft</a>
+    <a href="#about">About</a>
     <a href="#store">Store</a>
     <a href="#classes">Classes</a>
   </div>
 </nav>
 
-<!-- HERO -->
-<header class="hero">
-  <div class="kicker" data-h>Kosava — Pottery Studio</div>
-  <h1>
-    <span class="line-mask"><span data-h-line>One lump of clay.</span></span>
-    <span class="line-mask"><span data-h-line>One pair of hands.</span></span>
-    <span class="line-mask"><span data-h-line>One <em>finished</em> vessel.</span></span>
-  </h1>
-  <div class="sub" data-h>Scroll to follow a single piece of earth through every stage of its making — shaped, thrown, trimmed, and fired.</div>
-  <div class="scroll-cue" data-h>
-    <span class="label">Scroll</span>
-    <div class="track"></div>
-  </div>
-</header>
-
-<!-- THE MAKING -->
+<!-- THE MAKING (hero lives inside the film) -->
 <section id="making">
   <div class="stage-pin">
     <canvas id="seqCanvas"></canvas>
 
+    <header class="hero" id="hero">
+      <div class="kicker" data-h>Kosava — Pottery Studio</div>
+      <h1>
+        <span class="line-mask"><span data-h-line>One lump of clay.</span></span>
+        <span class="line-mask"><span data-h-line>One pair of hands.</span></span>
+        <span class="line-mask"><span data-h-line>One <em>finished</em> vessel.</span></span>
+      </h1>
+      <div class="sub" data-h>Scroll to follow a single piece of earth through every stage of its making — shaped, thrown, trimmed, and fired.</div>
+      <div class="scroll-cue" data-h>
+        <span class="label">Scroll</span>
+        <div class="track"></div>
+      </div>
+    </header>
+
     <div class="stage-copy left" data-stage="0">
-      <div class="stage-num">No. 01 — Hand Building</div>
+      <div class="stage-num">Hand Building</div>
       <h2>It begins as raw earth.</h2>
       <p>Every Kosava piece starts as a single ball of clay. We press, pinch, and coil it by hand — no moulds, no shortcuts — giving the clay its first memory of form.</p>
     </div>
 
     <div class="stage-copy right" data-stage="1">
-      <div class="stage-num">No. 02 — Wheel Throwing</div>
+      <div class="stage-num">Wheel Throwing</div>
       <h2>The wheel finds its center.</h2>
       <p>On the spinning wheel, the rough form is coaxed into balance. Wet hands and steady pressure draw the walls upward into a clean, symmetrical vessel.</p>
     </div>
 
     <div class="stage-copy left" data-stage="2">
-      <div class="stage-num">No. 03 — Trimming</div>
+      <div class="stage-num">Trimming</div>
       <h2>Less clay, more grace.</h2>
       <p>Once leather-hard, the bowl returns to the wheel. A sharpened blade peels away ribbons of excess until only the essential silhouette — and a delicate foot ring — remains.</p>
     </div>
 
     <div class="stage-copy right" data-stage="3">
-      <div class="stage-num">No. 04 — The Firing</div>
+      <div class="stage-num">The Firing</div>
       <h2>Earth, transformed.</h2>
       <p>Fired to 1,260°C and finished in our signature amber-orange glaze, the clay becomes permanent — polished, durable, and unlike any other piece in the world.</p>
     </div>
@@ -281,6 +378,24 @@
         <img id="bowlJump" src="assets/bowl_cutout.png" alt="The finished Kosava bowl with amber-orange glaze">
         <canvas id="bowlSheen"></canvas>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="about-grid">
+    <div class="about-img" data-reveal>
+      <!-- placeholder portrait — swap with a real photo of Rosa -->
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 500'%3E%3Crect width='400' height='500' fill='%23F4EFE6'/%3E%3Ccircle cx='200' cy='185' r='62' fill='%23E6DFD3'/%3E%3Cpath d='M86 420 C100 320 152 292 200 292 C248 292 300 320 314 420 L314 500 L86 500 Z' fill='%23E6DFD3'/%3E%3Cpath d='M150 470 a50 22 0 0 1 100 0 l0 8 a50 14 0 0 1 -100 0 Z' fill='%23C8571C' opacity='.85'/%3E%3Ctext x='200' y='66' font-family='Georgia, serif' font-style='italic' font-size='19' fill='%23857A6E' text-anchor='middle'%3EPortrait of Rosa%3C/text%3E%3Ctext x='200' y='92' font-family='Georgia, serif' font-style='italic' font-size='14' fill='%23A99C8D' text-anchor='middle'%3Ephoto coming soon%3C/text%3E%3C/svg%3E"
+        alt="Placeholder portrait of Rosa, ceramicist and owner of Kosava Pottery Studio" loading="lazy" width="400" height="500">
+    </div>
+    <div class="about-copy">
+      <div class="stage-num" data-reveal>About the studio</div>
+      <h2 data-reveal>Kosava is Rosa.<br><em>And Rosa is clay.</em></h2>
+      <p data-reveal>Rosa opened Kosava after fifteen years at the wheel — first as a student in her grandmother's village workshop, then as a production potter, and finally as a teacher who couldn't stop giving the craft away. <span style="opacity:.55">[Placeholder — replace with Rosa's real story.]</span></p>
+      <p data-reveal>Every piece in the store is thrown, trimmed, glazed, and fired by her own hands in the studio kiln. No moulds, no outsourcing — just earth, water, fire, and an unreasonable amount of patience. <span style="opacity:.55">[Placeholder.]</span></p>
+      <div class="about-sign" data-reveal>— Rosa</div>
     </div>
   </div>
 </section>
@@ -392,13 +507,9 @@ function buildAnimations() {
   gsap.from('[data-h-line]', { yPercent: 115, duration: 1.2, ease: 'power4.out', stagger: 0.12, delay: 0.2 });
   gsap.from('[data-h]', { opacity: 0, y: 16, duration: 1, ease: 'power3.out', stagger: 0.14, delay: 0.9 });
 
-  /* hero exit */
-  gsap.to('.hero', {
-    opacity: 0, yPercent: -8, ease: 'none',
-    scrollTrigger: { trigger: '.hero', start: '40% top', end: 'bottom top', scrub: true }
-  });
-
-  /* the making: pin + scrub */
+  /* the making: pin + scrub (hero occupies the first slice of progress) */
+  const HERO_ZONE = 0.07;
+  const hero = document.getElementById('hero');
   const copies = gsap.utils.toArray('.stage-copy');
   const segs = gsap.utils.toArray('#segBar .seg i');
   let activeStage = -1;
@@ -420,16 +531,24 @@ function buildAnimations() {
   ScrollTrigger.create({
     trigger: '#making',
     start: 'top top',
-    end: '+=480%',
+    end: '+=520%',
     pin: '#making .stage-pin',
     scrub: 0.5,
     anticipatePin: 1,
     onUpdate(self) {
-      render(self.progress);
-      const stage = Math.max(0, Math.min(STAGES - 1, Math.floor(self.progress * STAGES)));
+      const p = self.progress;
+      /* hero fades out over the first slice */
+      const heroT = Math.max(0, Math.min(1, 1 - p / HERO_ZONE));
+      gsap.set(hero, { opacity: heroT, y: (1 - heroT) * -40 });
+      /* film progress begins after the hero zone */
+      const fp = Math.max(0, Math.min(1, (p - HERO_ZONE) / (1 - HERO_ZONE)));
+      render(fp);
+      const stage = p < HERO_ZONE + 0.012
+        ? -1
+        : Math.max(0, Math.min(STAGES - 1, Math.floor(fp * STAGES)));
       setStage(stage);
       segs.forEach((seg, i) => {
-        const sp = Math.max(0, Math.min(1, self.progress * STAGES - i));
+        const sp = Math.max(0, Math.min(1, fp * STAGES - i));
         seg.style.transform = `scaleX(${sp})`;
       });
     }
@@ -476,6 +595,12 @@ function buildAnimations() {
   gsap.from('[data-f]', {
     opacity: 0, y: 26, duration: 0.9, ease: 'power3.out', stagger: 0.12,
     scrollTrigger: { trigger: '#finale', start: 'top 70%' }
+  });
+
+  /* about section reveals */
+  gsap.from('#about [data-reveal]', {
+    opacity: 0, y: 28, duration: 0.9, ease: 'power3.out', stagger: 0.1,
+    scrollTrigger: { trigger: '#about', start: 'top 75%' }
   });
 }
 
